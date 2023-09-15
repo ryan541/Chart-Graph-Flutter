@@ -1,6 +1,7 @@
 import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -16,10 +17,10 @@ class _HomePageState extends State<HomePage> {
     final rawData = await rootBundle.loadString("assets/csv_file.csv");
     List<List<dynamic>> convertedData =
         const CsvToListConverter().convert(rawData);
-    //print(convertedData);
+    print(convertedData);
 
     setState(() {
-      _dataList = convertedData;
+      _dataList = convertedData.sublist(1, 3);
     });
   }
 
@@ -32,6 +33,7 @@ class _HomePageState extends State<HomePage> {
       body: ListView.builder(
         itemCount: _dataList.length,
         itemBuilder: (ctx, index) {
+          final adjustedIndex = index + 1;
           return Card(
             margin: const EdgeInsets.all(10),
             color: index == 0 ? Colors.amber : Colors.blueAccent,

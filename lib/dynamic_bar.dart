@@ -11,6 +11,9 @@ class CreateBarChart extends StatefulWidget {
 class _CreateBarChartState extends State<CreateBarChart> {
   final double width = 15;
 
+  final ribColor = Colors.blue;
+  final cibColor = Colors.amber;
+
   late List<BarChartGroupData> rawBarGroups;
   late List<BarChartGroupData> showingBarGroups;
 
@@ -50,12 +53,12 @@ class _CreateBarChartState extends State<CreateBarChart> {
       barRods: [
         BarChartRodData(
           toY: y1,
-          color: Colors.amber,
+          color: ribColor,
           width: width,
         ),
         BarChartRodData(
           toY: y2,
-          color: Colors.blue,
+          color: cibColor,
           width: width,
         ),
       ],
@@ -87,15 +90,15 @@ class _CreateBarChartState extends State<CreateBarChart> {
     if (value == 0) {
       text = "";
     } else if (value == 10) {
-      text = "10K";
+      text = "10Kes";
     } else if (value == 20) {
-      text = "20K";
+      text = "20Kes";
     } else if (value == 30) {
-      text = "30K";
+      text = "30Kes";
     } else if (value == 40) {
-      text = "40K";
+      text = "40Kes";
     } else if (value == 50) {
-      text = "50K";
+      text = "50Kes";
     } else {
       return Container(
           //child: Text('Hi'),
@@ -114,7 +117,7 @@ class _CreateBarChartState extends State<CreateBarChart> {
   BarTouchData get barTouchData => BarTouchData(
         enabled: true,
         touchTooltipData: BarTouchTooltipData(
-          tooltipBgColor: Color.fromARGB(0, 255, 0, 0),
+          tooltipBgColor: const Color.fromARGB(0, 255, 0, 0),
           tooltipPadding: EdgeInsets.zero,
           tooltipMargin: 8.0,
           getTooltipItem: (BarChartGroupData group, int groupIndex,
@@ -124,7 +127,7 @@ class _CreateBarChartState extends State<CreateBarChart> {
             return BarTooltipItem(
               '$rodLabel: ${rodValue.toString()}',
               TextStyle(
-                color: rodLabel == "RIB" ? Colors.amber : Colors.blue,
+                color: rodLabel == "RIB" ? ribColor : cibColor,
                 fontSize: 15,
                 fontWeight: FontWeight.bold,
               ),
@@ -136,55 +139,119 @@ class _CreateBarChartState extends State<CreateBarChart> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(50),
-              child: BarChart(
-                //swapAnimationCurve: Curves.bounceIn,
-                BarChartData(
-                  barTouchData: barTouchData,
-                  maxY: 50,
-                  borderData: FlBorderData(
-                    border: const Border(
-                      bottom: BorderSide(width: 3),
-                      top: BorderSide.none,
-                      left: BorderSide(width: 3),
-                      right: BorderSide.none,
-                    ),
-                  ),
-                  barGroups: showingBarGroups,
-                  groupsSpace: 100,
-                  gridData: const FlGridData(show: true),
-                  titlesData: FlTitlesData(
-                    topTitles: const AxisTitles(
-                        sideTitles: SideTitles(showTitles: false)),
-                    rightTitles: const AxisTitles(
-                      sideTitles: SideTitles(
-                        showTitles: false,
+      appBar: AppBar(
+        leading: const Drawer(
+          child: Icon(Icons.keyboard_double_arrow_right_outlined),
+        ),
+        title: const Center(
+          child: Text(
+            'AZURE PROJECT COST DASHBOARD',
+            style:
+                TextStyle(fontWeight: FontWeight.bold, color: Colors.redAccent),
+          ),
+        ),
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(
+              Icons.add_alert,
+              color: Colors.red,
+            ),
+            tooltip: "Ring Bell",
+          )
+        ],
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          // crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Legend and Keys',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+                color: Colors.redAccent,
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  decoration: BoxDecoration(color: ribColor),
+                  width: 20,
+                  height: 20,
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+                const Text('RIB'),
+                const SizedBox(
+                  width: 10,
+                ),
+                Container(
+                  decoration: BoxDecoration(color: cibColor),
+                  width: 20,
+                  height: 20,
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+                const Text('CIB'),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.all(50.0),
+              child: AspectRatio(
+                aspectRatio: 4.5 / 2,
+                child: BarChart(
+                  //swapAnimationCurve: Curves.bounceIn,
+                  BarChartData(
+                    barTouchData: barTouchData,
+                    maxY: 50,
+                    borderData: FlBorderData(
+                      border: const Border(
+                        bottom: BorderSide(width: 3),
+                        top: BorderSide.none,
+                        left: BorderSide(width: 3),
+                        right: BorderSide.none,
                       ),
                     ),
-                    bottomTitles: AxisTitles(
-                      sideTitles: SideTitles(
-                        showTitles: true,
-                        reservedSize: 50,
-                        getTitlesWidget: bottomTitles,
+                    barGroups: showingBarGroups,
+                    groupsSpace: 100,
+                    gridData: const FlGridData(show: true),
+                    titlesData: FlTitlesData(
+                      topTitles: const AxisTitles(
+                          sideTitles: SideTitles(showTitles: false)),
+                      rightTitles: const AxisTitles(
+                        sideTitles: SideTitles(
+                          showTitles: false,
+                        ),
                       ),
-                    ),
-                    leftTitles: AxisTitles(
-                      sideTitles: SideTitles(
-                        showTitles: true,
-                        reservedSize: 50,
-                        getTitlesWidget: leftTitles,
+                      bottomTitles: AxisTitles(
+                        sideTitles: SideTitles(
+                          showTitles: true,
+                          reservedSize: 50,
+                          getTitlesWidget: bottomTitles,
+                        ),
+                      ),
+                      leftTitles: AxisTitles(
+                        sideTitles: SideTitles(
+                          showTitles: true,
+                          reservedSize: 80,
+                          getTitlesWidget: leftTitles,
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
