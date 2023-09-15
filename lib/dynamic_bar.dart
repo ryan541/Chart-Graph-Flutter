@@ -19,13 +19,13 @@ class _CreateBarChartState extends State<CreateBarChart> {
   @override
   void initState() {
     super.initState();
-    final barGroup1 = makeGroupData(0, 5, 12, "RIB", "CIB");
-    final barGroup2 = makeGroupData(1, 16, 12, "RIB", "CIB");
-    final barGroup3 = makeGroupData(2, 18, 5, "RIB", "CIB");
-    final barGroup4 = makeGroupData(3, 20, 16, "RIB", "CIB");
-    final barGroup5 = makeGroupData(4, 17, 6, "RIB", "CIB");
-    final barGroup6 = makeGroupData(5, 19, 30, "RIB", "CIB");
-    final barGroup7 = makeGroupData(6, 10, 30, "RIB", "CIB");
+    final barGroup1 = makeGroupData(0, 5, 12);
+    final barGroup2 = makeGroupData(1, 16, 12);
+    final barGroup3 = makeGroupData(2, 18, 5);
+    final barGroup4 = makeGroupData(3, 20, 16);
+    final barGroup5 = makeGroupData(4, 17, 6);
+    final barGroup6 = makeGroupData(5, 19, 30);
+    final barGroup7 = makeGroupData(6, 10, 30);
 
     final items = [
       barGroup1,
@@ -42,12 +42,10 @@ class _CreateBarChartState extends State<CreateBarChart> {
     showingBarGroups = rawBarGroups;
   }
 
-  BarChartGroupData makeGroupData(
-      int x, double y1, double y2, String label1, String label2) {
+  BarChartGroupData makeGroupData(int x, double y1, double y2) {
     return BarChartGroupData(
       barsSpace: 10,
       x: x,
-      showingTooltipIndicators: [0, 1],
       groupVertically: false,
       barRods: [
         BarChartRodData(
@@ -78,7 +76,7 @@ class _CreateBarChartState extends State<CreateBarChart> {
 
     return SideTitleWidget(
       axisSide: meta.axisSide,
-      space: 5,
+      space: 10,
       child: text,
     );
   }
@@ -87,15 +85,21 @@ class _CreateBarChartState extends State<CreateBarChart> {
     String text;
 
     if (value == 0) {
-      text = "1K";
+      text = "";
     } else if (value == 10) {
-      text = "5K";
-    } else if (value == 20) {
       text = "10K";
+    } else if (value == 20) {
+      text = "20K";
     } else if (value == 30) {
-      text = "15K";
+      text = "30K";
+    } else if (value == 40) {
+      text = "40K";
+    } else if (value == 50) {
+      text = "50K";
     } else {
-      return Container();
+      return Container(
+          //child: Text('Hi'),
+          );
     }
 
     return SideTitleWidget(
@@ -107,6 +111,28 @@ class _CreateBarChartState extends State<CreateBarChart> {
     );
   }
 
+  BarTouchData get barTouchData => BarTouchData(
+        enabled: true,
+        touchTooltipData: BarTouchTooltipData(
+          tooltipBgColor: Color.fromARGB(0, 255, 0, 0),
+          tooltipPadding: EdgeInsets.zero,
+          tooltipMargin: 8.0,
+          getTooltipItem: (BarChartGroupData group, int groupIndex,
+              BarChartRodData rod, int rodIndex) {
+            final String rodLabel = rodIndex == 0 ? "RIB" : "CIB";
+            final double rodValue = rod.toY;
+            return BarTooltipItem(
+              '$rodLabel: ${rodValue.toString()}',
+              TextStyle(
+                color: rodLabel == "RIB" ? Colors.amber : Colors.blue,
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
+              ),
+            );
+          },
+        ),
+      );
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -116,8 +142,10 @@ class _CreateBarChartState extends State<CreateBarChart> {
             child: Padding(
               padding: const EdgeInsets.all(50),
               child: BarChart(
+                //swapAnimationCurve: Curves.bounceIn,
                 BarChartData(
-                  maxY: 30,
+                  barTouchData: barTouchData,
+                  maxY: 50,
                   borderData: FlBorderData(
                     border: const Border(
                       bottom: BorderSide(width: 3),
@@ -133,9 +161,10 @@ class _CreateBarChartState extends State<CreateBarChart> {
                     topTitles: const AxisTitles(
                         sideTitles: SideTitles(showTitles: false)),
                     rightTitles: const AxisTitles(
-                        sideTitles: SideTitles(
-                      showTitles: false,
-                    )),
+                      sideTitles: SideTitles(
+                        showTitles: false,
+                      ),
+                    ),
                     bottomTitles: AxisTitles(
                       sideTitles: SideTitles(
                         showTitles: true,
